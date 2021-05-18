@@ -2,7 +2,7 @@ from NeuralNetwork import NeuralNetwork
 from Matrix import Matrix
 import random
 
-brain = NeuralNetwork([2,2,1])
+brain = NeuralNetwork([2,5,1])
 train_data = [[[0,0],[0]],[[0,1],[1]],[[1,0],[1]],[[1,1],[0]]]
 
 

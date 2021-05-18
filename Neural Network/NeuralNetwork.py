@@ -2,8 +2,8 @@ from Matrix import Matrix
 import random
 import math
 
-def sigmoid(x):
-    return 1/(1+math.exp(-x))
+def relu(x):
+    return max(0,x)
 
 class NeuralNetwork:
     def __init__(self,a):
@@ -28,14 +28,14 @@ class NeuralNetwork:
             curr_bias.random()
             self.biases.append(curr_bias)
             
-        self.learningRate = 1000
+        self.learningRate = 0.1
 
     def feedForward(self,input):
         self.inputs.setArray(input)
         self.net[0] = self.inputs
         for i in range(1,self.layerCount):
             self.net[i] = Matrix.multiply(self.weights[i-1],self.net[i-1])
-            self.net[i] = Matrix.map(self.net[i],sigmoid)
+            self.net[i] = Matrix.map(self.net[i],relu)
         self.outputs = self.net[-1]
         return self.outputs
 
@@ -47,7 +47,7 @@ class NeuralNetwork:
         for i in range(self.layerCount-2,0,-1):
             self.errors[i] = Matrix.multiply(self.weights[i].transpose(),self.errors[i+1])
         for i in range(self.layerCount-1):
-            gradient = Matrix.map(self.net[i+1],lambda x : x*(1-x))
+            gradient = Matrix.map(self.net[i+1],lambda x : int(x>0))
             gradient.multiplyElementWise(self.errors[i+1])
             gradient.mulScalar(self.learningRate)
             self.biases[i+1] = Matrix.add(self.biases[i+1],gradient)

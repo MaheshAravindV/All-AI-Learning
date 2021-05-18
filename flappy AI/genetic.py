@@ -1,9 +1,8 @@
 import random
 
-target = ['p','o','g']
 popSize = 2000
 mutationRate = 1
-targetSize = len(target)
+targetSize = 3*4 + 4 * 1 + 4 + 1
 
 def fitness(organism):
     score = 0
@@ -19,7 +18,7 @@ def createPopulationFromScratch(popSize):
         genes = []
         score = 0
         for j in range(targetSize):
-            genes.append(chr(random.randint(63,122)))
+            genes.append(random.random()*2-1)
         score = fitness(genes)
         population[i] = [genes,score**2]
     return population

@@ -28,7 +28,7 @@ class NeuralNetwork:
             curr_bias.random()
             self.biases.append(curr_bias)
             
-        self.learningRate = 1000
+        #self.learningRate = 1
 
     def feedForward(self,input):
         self.inputs.setArray(input)
@@ -36,40 +36,43 @@ class NeuralNetwork:
         for i in range(1,self.layerCount):
             self.net[i] = Matrix.multiply(self.weights[i-1],self.net[i-1])
             self.net[i] = Matrix.map(self.net[i],sigmoid)
-        self.outputs = self.net[-1]
+        if self.net[-1].data[0][0] > 0.5:
+            self.outputs = 1
+        else:    
+            self.outputs = 0
         return self.outputs
 
-    def train(self,input,output):
-        self.feedForward(input)
-        expected_output = Matrix(self.layers[-1],1)
-        expected_output.setArray(output)
-        self.errors[-1] = Matrix.add(expected_output,Matrix.map(self.outputs,lambda x : -x))
-        for i in range(self.layerCount-2,0,-1):
-            self.errors[i] = Matrix.multiply(self.weights[i].transpose(),self.errors[i+1])
-        for i in range(self.layerCount-1):
-            gradient = Matrix.map(self.net[i+1],lambda x : x*(1-x))
-            gradient.multiplyElementWise(self.errors[i+1])
-            gradient.mulScalar(self.learningRate)
-            self.biases[i+1] = Matrix.add(self.biases[i+1],gradient)
-            del_weight = Matrix.multiply(gradient,self.net[i].transpose())
-            self.weights[i] = Matrix.add(self.weights[i],del_weight)
-        return self.net[-1]
+    # def train(self,input,output):
+    #     self.feedForward(input)
+    #     expected_output = Matrix(self.layers[-1],1)
+    #     expected_output.setArray(output)
+    #     self.errors[-1] = Matrix.add(expected_output,Matrix.map(self.outputs,lambda x : -x))
+    #     for i in range(self.layerCount-2,0,-1):
+    #         self.errors[i] = Matrix.multiply(self.weights[i].transpose(),self.errors[i+1])
+    #     for i in range(self.layerCount-1):
+    #         gradient = Matrix.map(self.net[i+1],lambda x : x*(1-x))
+    #         gradient.multiplyElementWise(self.errors[i+1])
+    #         gradient.mulScalar(self.learningRate)
+    #         self.biases[i+1] = Matrix.add(self.biases[i+1],gradient)
+    #         del_weight = Matrix.multiply(gradient,self.net[i].transpose())
+    #         self.weights[i] = Matrix.add(self.weights[i],del_weight)
+    #     return self.net[-1]
 
-    def saveModel(self,name):
-        f = open((name+'.txt'),'w')
-        for i in self.weights:
-            f.write(str(i.data))
-            f.write('\n')
-        for i in self.biases:
-            f.write(str(i.data))
-            f.write('\n')
-        f.close()
+    # def saveModel(self,name):
+    #     f = open((name+'.txt'),'w')
+    #     for i in self.weights:
+    #         f.write(str(i.data))
+    #         f.write('\n')
+    #     for i in self.biases:
+    #         f.write(str(i.data))
+    #         f.write('\n')
+    #     f.close()
 
     # def loadFromSave(self,file):
     #     f = open(file,'r')
     #     for i in range(len(self.weights)):
 
-    def debugNet(self):
-        for i in range(self.layerCount):
-            self.net[i].display()
+    # def debugNet(self):
+    #     for i in range(self.layerCount):
+    #         self.net[i].display()
 

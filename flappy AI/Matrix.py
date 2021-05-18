@@ -12,7 +12,7 @@ class Matrix:
     def random(self):
         for i in range(self.rows):
             for j in range(self.cols):
-                self.data[i][j] = random.random()
+                self.data[i][j] = random.random()*2-1
 
 
     def display(self):
